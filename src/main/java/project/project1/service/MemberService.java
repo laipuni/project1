@@ -7,7 +7,6 @@ import project.project1.domain.Member;
 import project.project1.repository.MemberRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
