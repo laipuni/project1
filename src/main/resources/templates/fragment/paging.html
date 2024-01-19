@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <a th:fragment="paging(page,label)" class="page-link"
+       th:href="@{'/boards?'
+       + 'page=' + ${page} + '&'
+       + 'size=' + 10 + '&'
+       + 'sort=' + ${condition.sort} + '&'
+       + 'direction=' + ${condition.direction} + '&'
+       + 'keyword=' + ${condition.keyword==null?'':condition.keyword}  + '&'
+       + 'field=' + ${condition.field}
+       }">[[${label}]]
+    </a>
+
+    <a th:fragment="replyPaging(page,label)" class="page-link"
+       th:href="@{'/boards/' + ${board.id} + '?'
+       + 'page=' + ${page} + '&'
+       + 'size=10' + '&'
+       + 'sort=' + ${replies.sort} + '&'
+       + 'direction=ASC' + '&'
+       }">
+        [[${label}]]
+    </a>
+</body>
+</html>

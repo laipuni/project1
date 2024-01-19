@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/header/header :: header(~{::title})">
+    <title>게시글 작성</title>
+</head>
+<body>
+  <div th:replace="/fragment/headerBar :: headerBar"></div>
+
+  <div class="container">
+    <form action="" th:object="${board}" method="post" enctype="multipart/form-data">
+      <div>
+        <label for="title" th:text="#{label.title}">제목</label>
+        <input type="text" id="title" th:field="*{title}"
+               th:errorclass="field-error" class="form-control" placeholder="제목을 입력하세요.">
+        <div th:errors="*{title}" class="field-error"></div>
+      </div>
+      <div class="input-group">
+        <input type="file" name="imageFiles" class="form-control" multiple="multiple">
+      </div>
+      <div>
+        <label for="comments"></label>
+        <textarea id="comments" th:field="*{comments}" rows="5" th:errorclass="field-error"
+                  class="form-control" placeholder="내용을 입력하세요.">
+        </textarea>
+        <div th:errors="*{comments}" class="field-error"></div>
+      </div>
+      <button type="submit" class="w-100 btn btn-primary btn-lg">등록</button>
+      <button type="button" th:onclick="|location.href='@{/boards}'|" class="w-100 btn btn-secondary btn-lg">취소</button>
+    </form>
+  </div>
+  <div th:replace="/fragment/footer :: footer"></div>
+</body>
+</html>

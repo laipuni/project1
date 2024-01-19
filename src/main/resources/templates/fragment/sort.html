@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <a th:fragment="replySort(field,label)" class="dropdown-item"
+     th:href="@{'/boards/' + ${board.Id} + '?' +
+    'page=0' + '&' + 'size=10' + '&' +
+    'sort=' + ${field} + '&' + 'direction=ASC'
+  }">
+    [[${label}]]
+  </a>
+</body>
+</html>

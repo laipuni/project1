@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="/header/header :: header(~{::title})">
+  <title>게시판</title>
+</head>
+
+  <div th:replace="/fragment/headerBar :: headerBar"></div>
+
+<body>
+  <div class="container">
+    <h2 th:text="#{label.boards}"></h2>
+
+    <button th:onclick="|location.href='@{/boards/add}'|"
+            class="btn btn-primary btn-sm" th:text="#{label.addBoard}">게시글 작성</button>
+
+    <!--검색 input-->
+    <form class="input-group input-group-sm" th:object="${condition}" action="" method="get">
+      <select th:field="*{field}" class="input-group-text">
+        <option value="writer">작성자</option>
+        <option value="title">제목</option>
+      </select>
+      <input type="search" th:field="*{keyword}" class="form-control" placeholder="키워드를 입력....">
+      <select th:field="*{sort}" class="input-group-text">
+        <option value="Id">최신순</option>
+        <option value="view">조회순</option>
+        <option value="heart">추천순</option>
+      </select>
+      <select th:field="*{direction}" class="input-group-text">
+        <option value="ASC">오름차순</option>
+        <option value="DESC">내림차순</option>
+      </select>
+      <button class="btn btn-secondary bi-search"></button>
+    </form>
+    <!--검색 input-->
+
+    <!--게시판 출력-->
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th th:text="#{label.writer}">작성자</th>
+          <th th:text="#{label.title}">제목</th>
+          <th th:text="#{label.view}">view</th>
+          <th th:text="#{label.createDate}">작성일</th>
+          <th><i class="bi bi-heart-fill"></i></th>
+          <th>수정/삭제</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="board : ${boards}">
+          <td th:text="${board.userName}">닉네임</td>
+          <td><a th:text="${board.title}" th:href="@{/boards/{boardId}(boardId = ${board.boardId})}">제목</a></td>
+          <td th:text="${board.view}">조회수</td>
+          <td th:text="${board.creatDate}">작성날짜</td>
+          <td th:text="${board.heart}">좋아요</td>
+          <td class="pagination">
+            <!--게시글 수정-->
+            <form th:if="${#authentication.name == board.loginId || #authorization.expression('hasAuthority(''ROLE_Admin'')')}"
+                   th:action="@{/boards/modify}" method="get">
+              <input type="hidden" name="boardId" th:value="${board.boardId}">
+              <input type="hidden" name="loginId" th:value="${board.loginId}">
+              <button type="submit" class="btn btn-sm">
+                <i type="submit" class="bi bi-pencil-square page-item"></i>
+              </button>
+            </form>
+
+            <!--게시글 삭제-->
+            <button th:if="${#authentication.name == board.loginId || #authorization.expression('hasAuthority(''ROLE_Admin'')')}"
+                    type="button" class="btn btn-sm" data-bs-toggle="modal"
+                    th:attr="data-bs-target='#delete' + ${boardStat.index}">
+              <i class="bi bi-trash page-item"></i>
+            </button>
+
+            <div class="modal fade" th:id="'delete' + ${boardStat.index}">
+              <form class="page-item" th:action="@{/boards/delete}" method="post">
+                <input type="hidden" name="boardId" th:value="${board.boardId}">
+                <input type="hidden" name="loginId" th:value="${board.loginId}">
+                <div th:replace="/fragment/modal :: deleteModal('정말로 삭제하시겠습니까?','취소','삭제')"></div>
+              </form>
+            </div>
+
+            <!--권한이 없을 때 수정,삭제 버튼-->
+            <div class="pagination-sm" th:unless="${#authentication.name == board.loginId || #authorization.expression('hasAuthority(''ROLE_Admin'')')}">
+              <button type="button" class="btn w-auto m-auto page-item btn-sm" disabled>
+                <i class="bi bi-pencil-square opacity-50 page-item"></i>
+              </button>
+              <button type="button" class="btn w-auto m-auto page-item btn-sm" disabled>
+                <i class="bi bi-trash opacity-50 page-item"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!--게시판 출력-->
+
+    <!--게시글 페이지 번호 출력-->
+    <nav th:if="${totalPages} > 0">
+      <ul class="pagination justify-content-center pagination-sm">
+        <li class="page-item" th:classappend="${boards.first} ? 'disabled'">
+          <a th:replace="/fragment/paging :: paging(1,'<<')"></a>
+        </li>
+        <li class="page-item" th:classappend="${boards.first} ? 'disabled'">
+          <a th:replace="/fragment/paging :: paging(${condition.page - 1},'이전')"></a>
+        </li>
+        <li class="page-item" th:each="pagenum : ${#numbers.sequence(startPage,endPage)}"
+            th:classappend="${pagenum == condition.page}? 'disabled'">
+            <a th:replace="/fragment/paging :: paging(${pagenum},${pagenum})"></a>
+        </li>
+        <li class="page-item" th:classappend="${boards.last}?'disabled'">
+          <a th:replace="/fragment/paging :: paging(${condition.page + 1},'다음')"></a>
+        </li>
+        <li class="page-item" th:classappend="${boards.last} ?'disabled'">
+          <a th:replace="/fragment/paging :: paging(${totalPages},'>>')"></a>
+        </li>
+      </ul>
+    </nav>
+    <!--게시글 페이지 번호 출력-->
+  </div>
+
+  <div th:replace="/fragment/footer :: footer"></div>
+</body>
+</html>

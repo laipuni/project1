@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+  <div class="modal-dialog" th:fragment="deleteModal(content,cancel,submit)">
+    <div class="modal-content">
+      <div class="modal-body">
+        <span>[[${content}]]</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" data-bs-dismiss="modal" class="btn btn-secondary">[[${cancel}]]</button>
+        <button type="submit" class="btn btn-primary">[[${submit}]]</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="/header/header :: header(~{::title})">
+    <title th:text="${board.title}"></title>
+</head>
+<body>
+<div th:replace="/fragment/headerBar :: headerBar"></div>
+
+<div class="container">
+        <div class="col g-3">
+            <strong th:text="${board.title}">제목</strong>
+            <span th:text="${board.creatDate}"></span>
+        </div>
+        <hr class="my-4">
+        <div>
+            <img th:each="image : ${board.files}" th:alt="${image.getUploadFileName()}"
+                  th:src="|/images/${image.getStoreFileName()}|" width="100" height="100">
+            <textarea th:text="${board.comments}" style="resize: none"
+                      class="form-control" disabled>
+            </textarea>
+
+            <div class="pagination justify-content-end">
+                <form th:unless="${isHearting}"  th:action="@{/hearts/add}" method="post">
+                    <input type="hidden" name="boardId" th:value="${boardId}">
+                    <button type="submit" class="btn page-item justify-content-end">
+                        <span th:text="${heartCount}">0</span>
+                        <i class="bi bi-heart"></i>
+                    </button>
+                </form>
+
+                <form th:if="${isHearting}"  th:action="@{/hearts/delete}" method="post">
+                    <input type="hidden" name="boardId" th:value="${boardId}">
+                    <button type="submit" class="btn page-item">
+                        <span th:text="${heartCount}">0</span>
+                        <i class="bi bi-heart-fill"></i>
+                    </button>
+                </form>
+            </div>
+            <hr class="my-4">
+        </div>
+        <!--댓글 입력창 출력-->
+        <div class="nav">
+            <h3 class="nav-item" th:text="#{label.reply} + ${replies.getTotalElements()} + '개'">댓글</h3>
+            <div class="dropdown text-end">
+                <button type="button" class="btn btn-outline-dark nav-item" data-bs-toggle="dropdown">
+                    <span>정렬기준</span>
+                    <i class="bi bi-sort-numeric-down"></i>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a th:replace="/fragment/sort :: replySort('group','최신댓글')"></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <form th:action="@{/boards/{boardId}/comment(boardId=${board.id})}" class="row g-3" method="post">
+            <label for="replycomment" class="visually-hidden">댓글</label>
+            <div class="input-group">
+                <textarea type="text" class="form-control" id="comment"
+                          name="comment" style="resize: none" placeholder="댓글 추가...">
+                </textarea>
+                <button type="submit" class="btn btn-dark">댓글 작성</button>
+            </div>
+        </form>
+        <!--댓글 입력창 출력-->
+
+        <!--댓글 출력-->
+        <hr class="my-4">
+        <div th:each="reply : ${replies}">
+            <div th:class="'ms-' + ${reply.depth}">
+                <div>
+                    <div class="col g-3">
+                        <i th:if="${reply.depth > 0}" class="bi bi-arrow-return-right"></i>
+                        <strong th:text="${reply.writer}"></strong>
+                        <span th:text="${reply.creatTime}"></span>
+                    </div>
+                    <span th:text="${reply.comment}"></span>
+                </div>
+
+                <!--댓글 삭제-->
+                <button th:if="${#authentication.name == reply.loginId ||  #authorization.expression('hasAuthority(''ROLE_Admin'')')}"
+                        type="button" class="btn btn-warning" data-bs-toggle="modal"
+                        th:attr="data-bs-target='#modal' + ${replyStat.index}">
+                    삭제
+                </button>
+
+                <div class="modal fade" th:id="'modal' + ${replyStat.index}">
+                        <form th:action="@{/boards/{boardId}/comment/delete(boardId=${board.id})}" method="post">
+                            <label for="deleteReplyId" class="visually-hidden"></label>
+                            <input type="hidden" name="loginId" th:value="${reply.loginId}">
+                            <input type="hidden" id="deleteReplyId" name="deleteReplyId" th:value="${reply.id}">
+                            <div th:replace="/fragment/modal :: deleteModal('댓글을 삭제하시겠습니까?','취소','삭제')"></div>
+                        </form>
+                </div>
+                <!--댓글 삭제-->
+
+                <!--댓글 수정-->
+                <button th:if="${#authentication.name == reply.loginId || #authorization.expression('hasAuthority(''ROLE_Admin'')')}"
+                        type="button" data-bs-toggle="modal" class="btn btn-primary"
+                        th:attr="data-bs-target='#editmodal' + ${replyStat.index}">
+                    댓글 수정
+                </button>
+
+                <div class="modal fade" th:id="|editmodal${replyStat.index}|">
+                    <form method="post" th:action="@{/boards/{boardId}/comment/modify(boardId=${board.id})}">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    댓글 수정
+                                    <button type="button" data-bs-dismiss="modal" class="btn-close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <label class="visually-hidden" for="editReplyId"></label>
+                                    <input id="editReplyId" name="editReply" type="hidden" th:value="${reply.id}">
+                                    <input type="hidden" name="loginId" th:value="${reply.loginId}">
+                                    <label class="visually-hidden" for="editcomment"></label>
+                                    <textarea id="editcomment" name="editcomment"
+                                              style="resize:none" class="form-control"></textarea>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">수정</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!--댓글 수정-->
+
+                <!--댓글 작성-->
+                <button class="btn btn-secondary end-100" data-bs-toggle="collapse"
+                        th:attr="data-bs-target='#' + ${replyStat.index}" role="button"
+                        aria-expanded="false" aria-controls="replycollapse">
+                    댓글 작성
+                </button>
+
+                <div class="collapse" th:id="${replyStat.index}">
+                    <form th:action="@{/boards/{boardId}/reply(boardId=${board.id})}" method="post">
+                        <label class="visually-hidden" for="replyId"></label>
+                        <input type="hidden" id = "replyId" th:value="${reply.id}" name="replyId">
+                        <div class="input-group">
+                            <label for="replycomment" class="visually-hidden">답글내용</label>
+                            <textarea class="form-control" id="replycomment"
+                            name="replycomment" style="resize: none" placeholder="답글 추가...">
+                            </textarea>
+                            <button type="submit" class="btn btn-dark">댓글 작성</button>
+                        </div>
+                    </form>
+                </div>
+                <hr class="my-4">
+                <!--댓글 작성-->
+            </div>
+        </div>
+
+    <!--댓글 Pagination-->
+        <nav th:if="${replies.totalPages > 1}">
+            <ul class="pagination justify-content-center pagination-sm">
+                <li class="page-item" th:classappend="${replies.isFirst()} ? 'disabled'">
+                    <a th:replace="/fragment/paging :: replyPaging('0','<<')"></a>
+                </li>
+                <li class="page-item" th:classappend="${replies.isFirst()}?'disabled'">
+                    <a th:replace="/fragment/paging :: replyPaging(${replies.number - 1},'이전')"></a>
+                </li>
+                <li th:each="pageNum : ${#numbers.sequence(startPage,endPage)}"
+                    class="page-item" th:classappend="${replies.number == pageNum - 1} ? 'disabled'">
+                    <a th:replace="/fragment/paging :: replyPaging(${pageNum - 1},${pageNum})"></a>
+                </li>
+                <li class="page-item" th:classappend="${replies.isLast()} ? 'disabled'">
+                    <a th:replace="/fragment/paging :: replyPaging(${replies.number + 1},'다음')"></a>
+                </li>
+                <li class="page-item" th:classappend="${replies.isLast()} ? 'disabled'">
+                    <a th:replace="/fragment/paging :: replyPaging(${replies.totalPages - 1},'>>')"></a>
+                </li>
+            </ul>
+        </nav>
+    <!--댓글 Pagination-->
+    </div>
+<div th:replace="/fragment/footer :: footer"></div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+  <th:block th:fragment="nbsp(count)">
+    <span th:each="num : ${#numbers.sequence(0,count)}">
+      &nbsp;
+    </span>
+  </th:block>
+
+</body>
+</html>
