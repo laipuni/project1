@@ -25,6 +25,8 @@ public class LoginFailHandler extends SimpleUrlAuthenticationFailureHandler {
                                         AuthenticationException exception) throws IOException, ServletException {
         String errorMassage = "아이디 혹은 비밀번호가 잘못되었습니다.";
 
+        log.info("exception = {}",exception);
+
         if(exception instanceof BadCredentialsException){
             errorMassage = "아이디 혹은 비밀번호가 잘못되었습니다.";
         } else if(exception instanceof UsernameNotFoundException){

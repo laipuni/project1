@@ -26,8 +26,7 @@ public class LoginController {
     private final LoginService loginService;
 
     @GetMapping("/login")
-    public String loginForm(@ModelAttribute("loginForm") LoginForm form,
-                            @RequestParam(name = "error", defaultValue = "false")boolean error,
+    public String loginForm(@RequestParam(name = "error", defaultValue = "false")boolean error,
                             @RequestParam(name = "exception",required = false)String exception,
                             Model model){
 
@@ -37,17 +36,5 @@ public class LoginController {
         log.info("error={},exception={}",error,exception);
 
         return "/login/loginForm";
-    }
-
-    @PostMapping("/login")
-    public String login(@Valid @ModelAttribute LoginForm form, BindingResult bindingResult,
-                        @RequestParam(defaultValue = "/") String redirectPath, HttpServletRequest request){
-        if(bindingResult.hasErrors()){
-            return "/login/loginForm";
-        }
-
-        log.info("로그인 접근, 아이디={},비밀번호={}",form.getLoginId(),form.getPassword());
-
-        return "redirect:" + redirectPath;
     }
 }
