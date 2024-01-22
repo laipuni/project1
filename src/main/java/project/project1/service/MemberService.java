@@ -1,8 +1,11 @@
 package project.project1.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.project1.admin.MemberAdminPageCondition;
+import project.project1.admin.MemberAdminPageDto;
 import project.project1.domain.Member;
 import project.project1.repository.MemberRepository;
 
@@ -29,6 +32,11 @@ public class MemberService {
     public Member findByLoginId(String loginId){
         return memberRepository.findByLoginId(loginId)
                 .orElse(null);
+    }
+
+    public Page<MemberAdminPageDto> findAllBySearchCondition(MemberAdminPageCondition condition){
+        return memberRepository
+                .findAllByAdminSearchCondition(condition);
     }
 
     public List<Member> findAll(){

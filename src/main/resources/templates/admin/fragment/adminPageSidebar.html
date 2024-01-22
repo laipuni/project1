@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+    <header th:fragment="sidebar(index)" class="navbar navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <span class="navbar-brand">[[${index}]]</span>
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="offcanvas offcanvas-end text-bg-dark" id="offcanvas">
+                <div class="offcanvas-header">
+                    <div class="offcanvas-title"><h2>관리자</h2></div>
+                    <button class="btn-close btn-close-white" type="button" data-bs-dismiss="offcanvas"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-end">
+                        <li class="nav-item">
+                            <a class="nav-link" th:classappend="${index == '회원관리'} ? 'active'" th:href="@{/admin/member}">회원 관리</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:classappend="${index == '자원접근관리'} ? 'active'" th:href="@{/admin/resource}">자원접근 관리</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:classappend="${index == 'FAQ'} ? 'active'" th:href="@{/admin/FAQ}">FAQ</a>
+                        </li>
+                        <li>
+                            <a class="nav-link" th:href="@{/}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <form th:action="@{/logout}" method="post">
+                                <button class="btn nav-link btn-link" type="submit" th:text="#{label.logout}">로그아웃</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+</body>
+</html>

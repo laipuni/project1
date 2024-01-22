@@ -89,6 +89,8 @@ public class BoardController {
                            @AuthenticationPrincipal SecurityMember securityMember,
                            RedirectAttributes attributes) throws IOException {
 
+        log.info("게시글 생성 = {}",securityMember.getName());
+
         if(bindingResult.hasErrors()){
             return "/board/boardAddForm";
         }

@@ -75,6 +75,7 @@
               <form class="page-item" th:action="@{/boards/delete}" method="post">
                 <input type="hidden" name="boardId" th:value="${board.boardId}">
                 <input type="hidden" name="loginId" th:value="${board.loginId}">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                 <div th:replace="/fragment/modal :: deleteModal('정말로 삭제하시겠습니까?','취소','삭제')"></div>
               </form>
             </div>
