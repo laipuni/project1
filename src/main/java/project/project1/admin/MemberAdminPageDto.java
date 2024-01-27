@@ -1,35 +1,45 @@
 package project.project1.admin;
 
 import com.querydsl.core.annotations.QueryProjection;
-import project.project1.Security.MemberRoleEntity;
+import lombok.Data;
+import project.project1.member.Member;
+import project.project1.role.MemberRole;
+import project.project1.role.MemberRoleEntity;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 public class MemberAdminPageDto {
 
     private Long memberId;
     private String memberName;
+    private LocalDate birth;
+    private String phoneNumber;
     private String loginId;
-    private List<String> authorizes;
+    private LocalDate createTime;
+    private List<MemberRole> authorizes;
 
-    @QueryProjection
-    public MemberAdminPageDto(Long memberId, String memberName, String loginId, List<MemberRoleEntity> roleEntities) {
-        this.memberId = memberId;
-        this.memberName = memberName;
-        this.loginId = loginId;
-        this.authorizes = getAuthorizes(roleEntities);
+    public MemberAdminPageDto(Member member) {
+        this.memberId = member.getId();
+        this.memberName = member.getUserName();
+        this.birth = member.getBirth();
+        this.phoneNumber = member.getPhoneNumber();
+        this.loginId = member.getLoginId();
+        this.createTime = member.getCreateTime();
+        authorizes = getAuthorizes(member.getRole());
     }
 
-    private List<String> getAuthorizes(List<MemberRoleEntity> roleEntities) {
-        List<String> authorizes = new ArrayList<>();
-
+    private List<MemberRole> getAuthorizes(List<MemberRoleEntity> roleEntities) {
+        List<MemberRole> authorizes = new ArrayList<>();
         roleEntities
                 .iterator()
-                .forEachRemaining(e -> authorizes.add(e.getRole().getName()));
-
+                .forEachRemaining(e -> authorizes.add(e.getRole()));
         return authorizes;
     }
 
-
+    public boolean hasAuthorize(MemberRole role){
+        return authorizes.contains(role);
+    }
 }

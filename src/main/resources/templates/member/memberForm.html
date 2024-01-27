@@ -27,7 +27,7 @@
             </div>
             <div>
                 <label for="age" th:text="#{label.age}">나이</label>
-                <input type="text" id="age" th:field="*{age}" th:errorclass="is-invalid" class="form-control">
+                <input type="date" id="age" th:field="*{age}" th:errorclass="is-invalid" class="form-control">
                 <div class="text-danger" th:errors="*{age}"></div>
             </div>
             <div>

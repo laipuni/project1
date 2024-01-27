@@ -4,7 +4,8 @@ import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import project.project1.domain.Member;
+import project.project1.member.Member;
+import project.project1.role.MemberRoleEntity;
 
 import java.util.ArrayList;
 import java.util.List;

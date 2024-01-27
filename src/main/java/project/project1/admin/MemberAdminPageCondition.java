@@ -1,6 +1,10 @@
 package project.project1.admin;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+import project.project1.role.MemberRole;
 
 import java.time.LocalDate;
 
@@ -8,11 +12,24 @@ import java.time.LocalDate;
 public class MemberAdminPageCondition {
 
     private int page = 1;
+    private String keywordType;
     private String keyword;
-    private String role;
+
+
+    private MemberRole role;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birthStartDate;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birthEndDate;
+
     private String sort = "creatTime";
     private String direction = "ACS";
-
 }

@@ -6,8 +6,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import project.project1.domain.Member;
-import project.project1.repository.MemberRepository;
+import project.project1.member.Member;
+import project.project1.member.MemberRepository;
 
 @Slf4j
 @Service

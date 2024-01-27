@@ -26,8 +26,20 @@
         [[${label}]]
     </a>
 
-    <a th:fragment="adminMemberPaging()" class="page-link">
-        th:href
+    <a th:fragment="adminMemberPaging(page,label)" class="page-link"
+       th:href="@{'/admin/member?'
+        + 'page=' + ${page} + '&'
+        + 'kewordType=' + ${condition.keywordType} + '&'
+        + 'keyword=' + ${condition.keyword==null ? '' : condition.keyword} + '&'
+        + 'role=' + ${condition.role} + '&'
+        + 'startDate=' + ${condition.startDate == null ? '' : condition.startDate} + '&'
+        + 'endDate=' + ${condition.endDate == null ? '' : condition.endDate} + '&'
+        + 'birthStartDate=' + ${condition.birthStartDate == null ? '' : condition.birthStartDate} + '&'
+        + 'birthEndDate=' + ${condition.birthEndDate == null ? '' : condition.birthEndDate} + '&'
+        + 'sort=' + ${condition.sort} + '&'
+        + 'direction=' + ${condition.direction}
+        }">
+    [[${label}]]
     </a>
 </body>
 </html>

@@ -2,36 +2,18 @@ package project.project1.Controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.data.web.SortDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.project1.Security.SecurityMember;
-import project.project1.domain.Board;
-import project.project1.domain.Member;
-import project.project1.domain.Reply;
-import project.project1.domain.UploadFileEntity;
-import project.project1.dto.*;
-import project.project1.file.FileStore;
-import project.project1.file.UploadFile;
-import project.project1.login.SessionConst;
-import project.project1.service.BoardService;
-import project.project1.service.MemberService;
-import project.project1.service.ReplyService;
-import project.project1.service.UploadFileEntityService;
-
-import javax.validation.Valid;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import project.project1.board.Board;
+import project.project1.member.Member;
+import project.project1.reply.Reply;
+import project.project1.board.BoardService;
+import project.project1.member.MemberService;
+import project.project1.reply.ReplyService;
 
 @Slf4j
 @Controller
