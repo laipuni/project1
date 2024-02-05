@@ -20,14 +20,14 @@ public class HeartService {
     }
 
     public Heart findById(Long heartId){
-        return heartRepository.findById(heartId)
-                .orElse(null);
+        return heartRepository
+                .findById(heartId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 좋아요는 없습니다. id =" + heartId));
     }
 
     @Transactional
     public void delete(Long boardId,Long memberId){
-        heartRepository.findByBoardIdAndMemberId(boardId, memberId)
-                .ifPresent(heartRepository::delete);
+        heartRepository.deleteByBoardIdAndMemberId(boardId, memberId);
     }
 
     public boolean isExist(Long boardId,Long memberId){

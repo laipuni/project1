@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.project1.dto.BoardDetailDto;
 import project.project1.dto.BoardModifyForm;
 import project.project1.dto.BoardSearchCondition;
 import project.project1.board.Board;
@@ -20,12 +21,33 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
-    public Page<BoardDto> findAllBoard(Pageable pageable){
-        return boardRepository.findAllBoard(pageable);
-    }
-
     public Page<BoardDto> findAllSearchCondition(BoardSearchCondition condition){
         return boardRepository.findAllBySearchCondition(condition);
+    }
+
+    public Board findById(Long boardId) {
+        return boardRepository.findById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시물은 존재하지 않습니다."));
+    }
+
+    public void increaseBoardView(Long boardId) {
+        boardRepository.increaseBoardView(boardId);
+    }
+
+    public boolean exitsByIdAndMemberId(Long boardId, Long memberId){
+        return boardRepository.existsByIdAndMemberId(boardId,memberId);
+    }
+
+    public BoardDetailDto findBoardDetailDtoById(Long boardId) {
+        return boardRepository.findBoardDetailDtoById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글은 없습니다. id = " + boardId));
+    }
+
+    public BoardModifyForm findBoardModifyFormById(Long boardId) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글은 존재하지 않습니다. id=" + boardId));
+
+        return new BoardModifyForm(board);
     }
 
     @Transactional
@@ -34,24 +56,9 @@ public class BoardService {
         return board;
     }
 
-    public Board findById(Long boardId) {
-        return boardRepository.findById(boardId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시물은 존재 하지않습니다."));
-    }
-
-    public boolean exitsByIdAndMemberId(Long boardId, Long memberId){
-        log.info("회원ID ={}, 게시판ID={}",memberId,boardId);
-        return boardRepository.existsByIdAndMemberId(boardId,memberId);
-    }
-
     @Transactional
     public void delete(Long boardId){
-        boardRepository.findById(boardId)
-                .ifPresent(boardRepository :: delete);
-    }
-
-    public void increaseBoardView(Long boardId) {
-        boardRepository.increaseBoardView(boardId);
+       boardRepository.deleteById(boardId);
     }
 
     @Transactional

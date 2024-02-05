@@ -21,8 +21,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         Member member = memberRepository.findByLoginId(username)
                 .orElseThrow(() -> new UsernameNotFoundException("UsernameNotFoundException"));
 
-        log.info("조회중 loginId={}",username);
-
         SecurityMember securityMember = new SecurityMember(member);
 
         return securityMember;

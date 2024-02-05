@@ -13,19 +13,28 @@ import javax.persistence.*;
 public class MemberRoleEntity {
 
     @Id @GeneratedValue
-    @Column(name = "role_id")
+    @Column(name = "memberrole_id")
     private Long id;
 
-    @ManyToOne()
-    @JoinColumn(name = "memberId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
 
-    @Enumerated(EnumType.STRING)
-    private MemberRole role;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id")
+    private Role role;
 
-    public MemberRoleEntity(MemberRole role,Member member){
-        this.role = role;
+    @Enumerated(value = EnumType.STRING)
+    private MemberRole memberRole;
+
+    public MemberRoleEntity(Member member, Role role){
         this.member = member;
-        member.addRole(this);
+        this.role = role;
+        this.memberRole = role.getRole();
+        member.addMemberRoleEntity(this);
+    }
+
+    public Long getMemberId(){
+        return this.member.getId();
     }
 }

@@ -1,4 +1,4 @@
-package project.project1.Controller;
+package project.project1.reply;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,8 +1,10 @@
 package project.project1.member;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import project.project1.admin.MemberAdminModifyDto;
 import project.project1.role.MemberRoleEntity;
 import project.project1.domain.BaseEntity;
 import project.project1.board.Board;
@@ -30,7 +32,6 @@ public class Member extends BaseEntity {
 
     @Column(nullable = false, unique = true)
     private String userName;
-
     @Column(nullable = false)
     private LocalDate birth;
 
@@ -38,7 +39,7 @@ public class Member extends BaseEntity {
     private String phoneNumber;
 
     @OneToMany(mappedBy = "member",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<MemberRoleEntity> role = new ArrayList<>();
+    private List<MemberRoleEntity> memberRoleEntities = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
     private List<Reply> replies = new ArrayList<>();
@@ -49,6 +50,7 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member")
     private List<Heart> hearts = new ArrayList<>();
 
+    @Builder
     public Member(String loginId, String password, String userName, LocalDate birth, String phoneNumber) {
         this.loginId = loginId;
         this.password = password;
@@ -57,8 +59,8 @@ public class Member extends BaseEntity {
         this.phoneNumber = phoneNumber;
     }
 
-    public void addRole(MemberRoleEntity role){
-        this.role.add(role);
+    public void addMemberRoleEntity(MemberRoleEntity role){
+        this.memberRoleEntities.add(role);
     }
 
     public void addBoard(Board board) {
@@ -72,4 +74,13 @@ public class Member extends BaseEntity {
     public void addHeart(Heart heart) {
         hearts.add(heart);
     }
+
+    //<--수정 메소드-->>
+    public void update(String loginId,LocalDate birth, String userName,String phoneNumber){
+        this.loginId = loginId;
+        this.birth = birth;
+        this.userName = userName;
+        this.phoneNumber = phoneNumber;
+    }
+
 }

@@ -16,13 +16,16 @@ import org.springframework.util.StringUtils;
 
 import project.project1.admin.MemberAdminPageCondition;
 import project.project1.admin.MemberAdminPageDto;
+import project.project1.admin.QMemberAdminPageDto;
 import project.project1.role.MemberRole;
+import project.project1.role.MemberRoleEntityRepository;
 
 import javax.persistence.EntityManager;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static project.project1.member.QMember.member;
 import static project.project1.role.QMemberRoleEntity.memberRoleEntity;
@@ -32,7 +35,7 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom{
 
     private final JPAQueryFactory queryFactory;
 
-    public MemberRepositoryCustomImpl(EntityManager em) {
+    public MemberRepositoryCustomImpl(EntityManager em,MemberRoleEntityRepository memberRoleEntityRepository) {
         queryFactory = new JPAQueryFactory(em);
     }
 
@@ -40,31 +43,30 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom{
     public Page<MemberAdminPageDto> findAllByAdminSearchCondition(MemberAdminPageCondition condition) {
         Pageable page = getPageable(condition);
 
-        List<Member> result = queryFactory
-                .select(member)
+        List<MemberAdminPageDto> result = queryFactory
+                .select(
+                        new QMemberAdminPageDto(
+                                member.id,
+                                member.userName,
+                                member.birth,
+                                member.phoneNumber,
+                                member.loginId,
+                                member.createTime
+                        )
+                )
                 .from(member)
-                .join(member.role).fetchJoin()
                 .where(getMemberSearchFilter(condition))
                 .offset(page.getOffset())
                 .limit(page.getPageSize())
                 .orderBy(getSortBuilder(page.getSort()))
                 .fetch();
 
-        log.info("result = {}",result);
-
-        List<MemberAdminPageDto> content = new ArrayList<>();
-
-        result.
-                iterator()
-                .forEachRemaining(m -> content.add(new MemberAdminPageDto(m)));
-
         JPAQuery<Long> count = queryFactory
                 .select(member.count())
                 .from(member)
-                .join(member.role)
                 .where(getMemberSearchFilter(condition));
 
-        return PageableExecutionUtils.getPage(content,page,count::fetchOne);
+        return PageableExecutionUtils.getPage(result,page,count::fetchOne);
     }
 
     private OrderSpecifier[] getSortBuilder(Sort sort){
@@ -79,7 +81,8 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom{
 
             switch (order.getProperty()){
                 case "createTime":
-                    orders.add(new OrderSpecifier(direction,member.createTime));
+                    orders.add(new OrderSpecifier(direction,member.id));
+                    break;
                 case "birth":
                     orders.add(new OrderSpecifier(direction,member.birth));
                     break;
@@ -108,7 +111,7 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom{
                         JPAExpressions
                                 .select(memberRoleEntity.member.id)
                                 .from(memberRoleEntity)
-                                .where(memberRoleEntity.role.eq(role))
+                                .where(memberRoleEntity.memberRole.eq(role))
                 )
         );
     }

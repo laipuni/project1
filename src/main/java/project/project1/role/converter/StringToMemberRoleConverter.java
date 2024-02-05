@@ -12,7 +12,6 @@ public class StringToMemberRoleConverter implements Converter<String, MemberRole
             case "Admin": return MemberRole.ADMIN;
         }
 
-
         return null;
     }
 }

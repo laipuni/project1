@@ -1,8 +1,6 @@
 package project.project1.admin;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import project.project1.role.MemberRole;
 
@@ -11,10 +9,9 @@ import java.time.LocalDate;
 @Data
 public class MemberAdminPageCondition {
 
-    private int page = 1;
+    private Integer page = 1;
     private String keywordType;
     private String keyword;
-
 
     private MemberRole role;
 

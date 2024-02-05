@@ -5,14 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import project.project1.role.MemberRole;
-import project.project1.role.MemberRoleEntity;
+import project.project1.role.*;
 import project.project1.board.Board;
 import project.project1.member.Member;
 import project.project1.reply.Reply;
 import project.project1.board.BoardRepository;
 import project.project1.member.MemberRepository;
-import project.project1.role.MemberRoleEntityRepository;
 import project.project1.reply.ReplyRepository;
 
 import javax.annotation.PostConstruct;
@@ -27,21 +25,29 @@ public class InitComponent {
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
     private final MemberRoleEntityRepository memberRoleEntityRepository;
+    private final RoleRepository roleRepository;
     private final ReplyRepository replyRepository;
     private final PasswordEncoder encoder;
 
     @PostConstruct
     void init(){
+        Role userRole = new Role(MemberRole.USER);
+        Role adminRole = new Role(MemberRole.ADMIN);
+
+        roleRepository.save(userRole);
+        roleRepository.save(adminRole);
+
         Member tester = new Member(
                 "test",
                 encoder.encode("test"),
                 "test", LocalDate.of(2020,1,1),
                 "010-1234-1234"
         );
-        MemberRoleEntity testerAdminRoleEntity = new MemberRoleEntity(MemberRole.ADMIN,tester);
-        MemberRoleEntity testerUserRoleEntity = new MemberRoleEntity(MemberRole.USER,tester);
-
         memberRepository.save(tester);
+
+        MemberRoleEntity testerAdminRoleEntity = new MemberRoleEntity(tester,userRole);
+        MemberRoleEntity testerUserRoleEntity = new MemberRoleEntity(tester,adminRole);
+
         memberRoleEntityRepository.save(testerAdminRoleEntity);
         memberRoleEntityRepository.save(testerUserRoleEntity);
 
@@ -56,7 +62,7 @@ public class InitComponent {
                     LocalDate.of(2020,i/10 + 1,i/4 + 1),
                     "010-1234-1234"
             );
-            MemberRoleEntity roleEntity = new MemberRoleEntity(MemberRole.USER,member);
+            MemberRoleEntity roleEntity = new MemberRoleEntity(member,userRole);
             Board board = Board.createBoard(member,str,str);
             memberRepository.save(member);
             memberRoleEntityRepository.save(roleEntity);

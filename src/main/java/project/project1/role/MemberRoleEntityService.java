@@ -4,12 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberRoleEntityService {
 
-    private MemberRoleEntityRepository memberRoleEntityRepository;
+    private final MemberRoleEntityRepository memberRoleEntityRepository;
 
     @Transactional
     public MemberRoleEntity save(MemberRoleEntity memberRoleEntity){
@@ -19,17 +21,16 @@ public class MemberRoleEntityService {
 
     public MemberRoleEntity findById(Long memberRoleEntityId){
         return memberRoleEntityRepository.findById(memberRoleEntityId)
-                .orElseThrow(() -> new IllegalArgumentException("부여받은 Role이 없습니다."));
-    }
-
-    public MemberRoleEntity findByMemberId(Long memberId){
-        return memberRoleEntityRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("부여받은 Role이 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 Role은 없습니다. id=" + memberRoleEntityId));
     }
 
     @Transactional
-    public void removeRole(MemberRoleEntity memberRoleEntity){
-       memberRoleEntityRepository.delete(memberRoleEntity);
+    public void delete(Long memberRoleEntityId){
+       memberRoleEntityRepository.deleteById(memberRoleEntityId);
     }
 
+    @Transactional
+    public void deleteAllByMemberId(Long memberId) {
+        memberRoleEntityRepository.deleteAllByMemberId(memberId);
+    }
 }

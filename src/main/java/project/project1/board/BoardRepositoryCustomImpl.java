@@ -3,21 +3,23 @@ package project.project1.board;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.*;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.util.StringUtils;
-import project.project1.dto.BoardSearchCondition;
-import project.project1.dto.BoardDto;
-import project.project1.dto.QBoardDto;
+import project.project1.dto.*;
+import project.project1.heart.QHeart;
 import project.project1.member.QMember;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static project.project1.board.QBoard.*;
+import static project.project1.heart.QHeart.heart;
 import static project.project1.member.QMember.member;
 
 public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
@@ -26,30 +28,6 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
 
     public BoardRepositoryCustomImpl(EntityManager em) {
         queryFactory = new JPAQueryFactory(em);
-    }
-
-    @Override
-    public Page<BoardDto> findAllBoard(Pageable pageable) {
-        List<BoardDto> contents = queryFactory
-                .select(new QBoardDto(
-                        board.id,
-                        board.member.userName,
-                        board.member.loginId,
-                        board.title,
-                        board.view,
-                        board.hearts.size(),
-                        board.createTime
-                ))
-                .from(board)
-                .join(board.member, member)
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        JPAQuery<Board> boardJPAQuery = queryFactory
-                .selectFrom(board);
-
-        return PageableExecutionUtils.getPage(contents,pageable,boardJPAQuery::fetchCount);
     }
 
     @Override
@@ -84,12 +62,25 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
         return PageableExecutionUtils.getPage(contents,pageable,countQuery::fetchOne);
     }
 
-    private static Pageable createPageable(BoardSearchCondition condition) {
-        String direction = condition.getDirection();
-        Sort.Direction direct = direction.equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
-        Sort.Order order = new Sort.Order(direct, condition.getSort());
-        Pageable pageable = PageRequest.of(condition.getPage() - 1, 10,Sort.by(order));
-        return pageable;
+    @Override
+    public Optional<BoardDetailDto> findBoardDetailDtoById(Long boardId) {
+        BoardDetailDto result = queryFactory
+                .select(
+                        new QBoardDetailDto(
+                                board.id,
+                                board.member.userName,
+                                board.member.loginId,
+                                board.title,
+                                board.hearts.size(),
+                                board.createTime
+                        )
+                )
+                .from(board)
+                .join(board.member)
+                .where(board.id.eq(boardId))
+                .fetchOne();
+
+        return Optional.ofNullable(result);
     }
 
 
@@ -135,5 +126,13 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom{
             //title
             return new BooleanBuilder(board.title.contains(keyword));
         }
+    }
+
+    private static Pageable createPageable(BoardSearchCondition condition) {
+        String direction = condition.getDirection();
+        Sort.Direction direct = direction.equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort.Order order = new Sort.Order(direct, condition.getSort());
+        Pageable pageable = PageRequest.of(condition.getPage() - 1, 10,Sort.by(order));
+        return pageable;
     }
 }

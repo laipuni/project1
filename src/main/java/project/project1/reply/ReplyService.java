@@ -21,7 +21,7 @@ public class ReplyService {
         return reply;
     }
 
-    public Page<ReplyDto> findByBoardId(Pageable pageable, Long boardId){
+    public Page<ReplyDto> findReplyDtoByBoardId(Pageable pageable, Long boardId){
         return replyRepository.findReplyBoardId(pageable, boardId);
     }
 
@@ -41,8 +41,7 @@ public class ReplyService {
     //댓글 삭제 자식 댓글도 함께 삭제
     @Transactional
     public void delete(Long replyId){
-        replyRepository.findById(replyId)
-                .ifPresent(replyRepository::delete);
+        replyRepository.deleteById(replyId);
     }
 
     //현재 댓글 그룹에 같은 depth가진 댓글중 order가 가장 높은 값을 반환

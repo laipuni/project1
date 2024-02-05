@@ -18,7 +18,7 @@ public class SecurityMember extends User {
     private static final String ROLE = "ROLE_";
 
     public SecurityMember(Member member) {
-        super(member.getLoginId(), member.getPassword(),makeGrantedAuthority(member.getRole()));
+        super(member.getLoginId(), member.getPassword(),makeGrantedAuthority(member.getMemberRoleEntities()));
         this.name = member.getUserName();
         this.memberId = member.getId();
     }
@@ -27,7 +27,7 @@ public class SecurityMember extends User {
         List<GrantedAuthority> authorities = new ArrayList<>();
 
         for (MemberRoleEntity memberRoleEntity : role) {
-            authorities.add(new SimpleGrantedAuthority(ROLE + memberRoleEntity.getRole().getName()));
+            authorities.add(new SimpleGrantedAuthority(ROLE + memberRoleEntity.getMemberRole().getName()));
         }
 
         return authorities;

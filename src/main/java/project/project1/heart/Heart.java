@@ -23,13 +23,12 @@ public class Heart {
     @JoinColumn(name = "board_id")
     private Board board;
 
-
     //연관 관계 메소드
     public Heart(Board board, Member member){
         this.board = board;
-        board.addHeart(this);
-
         this.member = member;
+
+        board.addHeart(this);
         member.addHeart(this);
     }
 

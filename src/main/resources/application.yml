@@ -8,13 +8,14 @@ spring:
     driver-class-name: org.h2.Driver
 
 
+
   jpa:
     hibernate:
       ddl-auto: create
     properties:
       hibernate:
-#        format_sql: true
-#        show_sql: true
+        format_sql: true
+        show_sql: true
 
 server:
   port: 8080

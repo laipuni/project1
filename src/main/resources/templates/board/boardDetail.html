@@ -7,7 +7,7 @@
 <body>
 <div th:replace="/fragment/headerBar :: headerBar"></div>
 
-<div class="container">
+<div class="container py-5">
         <div class="col g-3">
             <strong th:text="${board.title}">제목</strong>
             <span th:text="${board.creatDate}"></span>
@@ -24,7 +24,7 @@
                 <form th:unless="${isHearting}"  th:action="@{/hearts/add}" method="post">
                     <input type="hidden" name="boardId" th:value="${boardId}">
                     <button type="submit" class="btn page-item justify-content-end">
-                        <span th:text="${heartCount}">0</span>
+                        <span th:text="${board.heartNum}">좋아요수</span>
                         <i class="bi bi-heart"></i>
                     </button>
                 </form>
@@ -32,7 +32,7 @@
                 <form th:if="${isHearting}"  th:action="@{/hearts/delete}" method="post">
                     <input type="hidden" name="boardId" th:value="${boardId}">
                     <button type="submit" class="btn page-item">
-                        <span th:text="${heartCount}">0</span>
+                        <span th:text="${board.heartNum}">좋아요수</span>
                         <i class="bi bi-heart-fill"></i>
                     </button>
                 </form>
@@ -53,7 +53,7 @@
             </div>
         </div>
 
-        <form th:action="@{/boards/{boardId}/comment(boardId=${board.id})}" class="row g-3" method="post">
+        <form th:action="@{/boards/{boardId}/comment(boardId=${board.boardId})}" class="row g-3" method="post">
             <label for="replycomment" class="visually-hidden">댓글</label>
             <div class="input-group">
                 <textarea type="text" class="form-control" id="comment"
@@ -85,7 +85,7 @@
                 </button>
 
                 <div class="modal fade" th:id="'modal' + ${replyStat.index}">
-                        <form th:action="@{/boards/{boardId}/comment/delete(boardId=${board.id})}" method="post">
+                        <form th:action="@{/boards/{boardId}/comment/delete(boardId=${board.boardId})}" method="post">
                             <label for="deleteReplyId" class="visually-hidden"></label>
                             <input type="hidden" name="loginId" th:value="${reply.loginId}">
                             <input type="hidden" id="deleteReplyId" name="deleteReplyId" th:value="${reply.id}">
@@ -102,7 +102,7 @@
                 </button>
 
                 <div class="modal fade" th:id="|editmodal${replyStat.index}|">
-                    <form method="post" th:action="@{/boards/{boardId}/comment/modify(boardId=${board.id})}">
+                    <form method="post" th:action="@{/boards/{boardId}/comment/modify(boardId=${board.boardId})}">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -134,7 +134,7 @@
                 </button>
 
                 <div class="collapse" th:id="${replyStat.index}">
-                    <form th:action="@{/boards/{boardId}/reply(boardId=${board.id})}" method="post">
+                    <form th:action="@{/boards/{boardId}/reply(boardId=${board.boardId})}" method="post">
                         <label class="visually-hidden" for="replyId"></label>
                         <input type="hidden" id = "replyId" th:value="${reply.id}" name="replyId">
                         <div class="input-group">

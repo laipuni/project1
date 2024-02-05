@@ -59,7 +59,6 @@ public class BoardController {
         int startPage = PagingUtils.getStartPage(condition.getPage(),10);
         int endPage = PagingUtils.getEndPage(startPage,boardDto.getTotalPages());
 
-
         model.addAttribute("boards",boardDto);
         model.addAttribute("totalPages",boardDto.getTotalPages());
         model.addAttribute("startPage",startPage);
@@ -82,8 +81,6 @@ public class BoardController {
                            BindingResult bindingResult,
                            @AuthenticationPrincipal SecurityMember securityMember,
                            RedirectAttributes attributes) throws IOException {
-
-        log.info("게시글 생성 = {}",securityMember.getName());
 
         if(bindingResult.hasErrors()){
             return "/board/boardAddForm";
@@ -128,17 +125,16 @@ public class BoardController {
         //조회수 증가
         boardService.increaseBoardView(boardId);
 
-        String loginId = securityMember.getUsername();
-        Member findMember = memberService.findByLoginId(loginId);
+        //게시글 조회를 위한 dto조회
+        BoardDetailDto boardDetailDto = boardService.findBoardDetailDtoById(boardId);
 
-        Board findBoard = boardService.findById(boardId);
-        BoardDetailDto boardDetailDto = new BoardDetailDto(findBoard);
-        Page<ReplyDto> findReplies = replyService.findByBoardId(pageable, findBoard.getId());
+        //게시글 댓글 dto조회
+        Page<ReplyDto> findReplies = replyService.findReplyDtoByBoardId(pageable, boardId);
 
-        //게시판 좋아요 조회
-        boolean isHearting = heartService.isExist(boardId, findMember.getId());
-        Long heartCount = heartService.getCountHeart(boardId);
+        //게시판 좋아요를 눌렀는지 판단
+        boolean isHearting = heartService.isExist(boardId, securityMember.getMemberId());
 
+        //댓글 페이징
         int startPage = PagingUtils.getStartPage(pageable.getPageNumber() + 1,10);
         int endPage = PagingUtils.getEndPage(startPage,findReplies.getTotalPages());
 
@@ -147,7 +143,6 @@ public class BoardController {
         model.addAttribute("startPage",startPage);
         model.addAttribute("endPage",endPage);
         model.addAttribute("isHearting",isHearting);
-        model.addAttribute("heartCount",heartCount);
 
         return "/board/boardDetail";
     }
@@ -181,8 +176,7 @@ public class BoardController {
             @RequestParam("loginId") String userId,
             Model model
     ){
-        Board findBoard = boardService.findById(boardId);
-        BoardModifyForm form = new BoardModifyForm(boardId, findBoard.getTitle(), findBoard.getComments());
+        BoardModifyForm form = boardService.findBoardModifyFormById(boardId);
         model.addAttribute("board",form);
 
         return "board/boardModifyForm";

@@ -8,8 +8,8 @@
   <div th:replace="/fragment/headerBar :: headerBar"></div>
 
 <body>
-  <div class="container">
-    <h2 th:text="#{label.boards}"></h2>
+  <div class="container py-5">
+    <h3 class="text-center" th:text="#{label.boards}"></h3>
 
     <button th:onclick="|location.href='@{/boards/add}'|"
             class="btn btn-primary btn-sm" th:text="#{label.addBoard}">게시글 작성</button>

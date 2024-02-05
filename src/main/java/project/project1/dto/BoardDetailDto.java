@@ -1,5 +1,6 @@
 package project.project1.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import project.project1.board.Board;
 import project.project1.file.UploadFileEntity;
@@ -11,28 +12,21 @@ import java.util.List;
 
 @Data
 public class BoardDetailDto {
-    private Long Id;
+    private Long boardId;
     private String userName;
     private String title;
     private String comments;
     private LocalDate creatDate;
-    private List<UploadFile> files = new ArrayList<>();
+    private int heartNum;
+    private List<UploadFile> files;
 
-    public BoardDetailDto(Board board){
-        this.Id = board.getId();
-        this.userName = board.getWriter();
-        this.title = board.getTitle();
-        this.comments = board.getComments();
-        this.creatDate = board.getCreateTime();
-        convertFile(board.getFiles());
-    }
-
-    private void convertFile(List<UploadFileEntity> uploadFileEntities){
-        if(uploadFileEntities.isEmpty()){
-            return;
-        }
-
-        uploadFileEntities.iterator()
-                .forEachRemaining(u->files.add(u.getUploadFile()));
+    @QueryProjection
+    public BoardDetailDto(Long boardId,String userName, String title, String comments,int heartNum, LocalDate creatDate) {
+        this.boardId = boardId;
+        this.userName = userName;
+        this.title = title;
+        this.heartNum = heartNum;
+        this.comments = comments;
+        this.creatDate = creatDate;
     }
 }
