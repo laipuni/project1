@@ -6,7 +6,7 @@
 </head>
 <body>
   <a th:fragment="replySort(field,label)" class="dropdown-item"
-     th:href="@{'/boards/' + ${board.Id} + '?' +
+     th:href="@{'/boards/' + ${board.boardId} + '?' +
     'page=0' + '&' + 'size=10' + '&' +
     'sort=' + ${field} + '&' + 'direction=ASC'
   }">

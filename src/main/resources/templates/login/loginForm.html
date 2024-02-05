@@ -5,24 +5,34 @@
 </head>
 <body>
 
-  <div class="form-sign w-25 m-auto">
+  <div class="form-sign py-5 w-25 m-auto">
     <h2 class="text-center mb-3" th:text="#{label.login}"></h2>
-    <form action="" th:object="${loginForm}" method="post">
-      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+    <form action="" method="post">
       <div class="form-floating">
-        <input type="text" id="loginId" th:classappend="${error} ? 'is-invalid'"
-               th:field="*{loginId}" class="form-control" placeholder="name@example.com" required>
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <input type="text" id="loginId" name="loginId" th:classappend="${error} ? 'is-invalid'"
+               class="form-control" placeholder="name@example.com" required>
         <label for="loginId">아이디</label>
       </div>
+
       <div class="form-floating">
-        <input type="password" id="password" th:classappend="${error} ? 'is-invalid'"
-               th:field="*{password}" class="form-control" placeholder="password" required>
+        <input type="password" id="password" name="password" th:classappend="${error} ? 'is-invalid'"
+               class="form-control" placeholder="password" required>
         <label for="password" th:text="#{label.password}">비밀번호</label>
       </div>
+
+      <div>
+        <input type="checkbox" class="form-check-input" id="remember" name="remember">
+        <label for="remember" th:text="#{label.remeberMe}">자동 로그인</label>
+      </div>
+
       <div th:if="${error}">
         <div class="text-danger" th:text="${exception}"></div>
       </div>
+
       <hr class="my-4">
+
       <button type="submit" class="w-100 btn btn-primary btn-lg">로그인</button>
     </form>
   </div>

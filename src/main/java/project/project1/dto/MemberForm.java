@@ -24,8 +24,7 @@ public class MemberForm {
     private String userName;
 
     @NotNull
-    @Range(min = 0,max = 100)
-    private Integer age;
+    private LocalDate birth;
 
     @Pattern(regexp = "^01(?:0|1|[6-9])-(?:\\d{3}|\\d{4})-\\d{4}$")
     private String phoneNumber;

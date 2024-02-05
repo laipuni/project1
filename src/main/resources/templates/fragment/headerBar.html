@@ -32,7 +32,7 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li sec:authorize="hasRole('ROLE_Admin')">
-                                <a th:href="@{/admin}" class="dropdown-item">관리자페이지</a>
+                                <a th:href="@{/admin/member}" class="dropdown-item">관리자페이지</a>
                                 <hr class="dropdown-divider">
                             </li>
                             <li>
@@ -40,7 +40,9 @@
                                 <hr class="dropdown-divider">
                             </li>
                             <li>
-                                <a class="dropdown-item" th:href="@{/logout}" th:text="#{label.logout}">로그아웃</a>
+                                <form th:action="@{/logout}" method="post">
+                                    <button class="dropdown-item btn btn-link" th:text="#{label.logout}">로그아웃</button>
+                                </form>
                             </li>
                         </ul>
                     </div>

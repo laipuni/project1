@@ -1,0 +1,46 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="ko" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head th:replace="header/header :: header(~{::title})">-->
+<!--    <title>회원 수정</title>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--    <div th:replace="admin/fragment/adminPageSidebar :: sidebar('회원관리')"></div>-->
+
+<!--    <div class="container py-5">-->
+<!--        <div>-->
+<!--            <label for="userName">회원이름</label>-->
+<!--            <input class="form-control" th:field="${userName}" type="text" id="userName">-->
+<!--        </div>-->
+
+<!--        <div>-->
+<!--            <label for="loginId">아이디</label>-->
+<!--            <input class="form-control" th:field="*{loginId}" type="text" id="loginId">-->
+<!--        </div>-->
+
+<!--        <div>-->
+<!--            <label for="birth">생일</label>-->
+<!--            <input class="form-select" th:field="*{birth}" type="date" id="birth">-->
+<!--        </div>-->
+
+<!--        <div>-->
+<!--            <label for="phoneNumber">휴대폰 번호</label>-->
+<!--            <input class="form-control" th:field="*{phoneNumber}" type="text" id="phoneNumber">-->
+<!--        </div>-->
+
+<!--        <div th:each="memberRole : ${memberRoles}">-->
+<!--            <input class="form-check-input" type="checkbox" th:field="*{roles}" th:value="${memberRole.name}">-->
+<!--            <label class="form-check-label" th:for="${#ids.prev('roles')}" th:text="${memberRole.name}"></label>-->
+<!--        </div>-->
+
+<!--        <div class="input-group-sm justify-content-center">-->
+<!--            <button class="btn btn-secondary" type="button"-->
+<!--                    th:onclick="|location.href='@{/admin/member}'|"-->
+<!--                    th:text="#{label.cancel}">-->
+<!--                취소-->
+<!--            </button>-->
+<!--            <button class="btn btn-primary" type="submit" th:text="#{label.modify}">수정</button>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</body>-->
+<!--</html>-->

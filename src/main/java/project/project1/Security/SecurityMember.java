@@ -4,7 +4,8 @@ import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import project.project1.domain.Member;
+import project.project1.member.Member;
+import project.project1.role.MemberRoleEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ public class SecurityMember extends User {
     private static final String ROLE = "ROLE_";
 
     public SecurityMember(Member member) {
-        super(member.getLoginId(), member.getPassword(),makeGrantedAuthority(member.getRole()));
+        super(member.getLoginId(), member.getPassword(),makeGrantedAuthority(member.getMemberRoleEntities()));
         this.name = member.getUserName();
         this.memberId = member.getId();
     }
@@ -26,7 +27,7 @@ public class SecurityMember extends User {
         List<GrantedAuthority> authorities = new ArrayList<>();
 
         for (MemberRoleEntity memberRoleEntity : role) {
-            authorities.add(new SimpleGrantedAuthority(ROLE + memberRoleEntity.getRole().getName()));
+            authorities.add(new SimpleGrantedAuthority(ROLE + memberRoleEntity.getMemberRole().getName()));
         }
 
         return authorities;

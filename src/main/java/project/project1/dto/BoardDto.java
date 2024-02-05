@@ -2,12 +2,8 @@ package project.project1.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
-import project.project1.domain.Board;
-import project.project1.domain.UploadFileEntity;
-import project.project1.file.UploadFile;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 public class BoardDto {

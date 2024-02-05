@@ -6,16 +6,20 @@
 <body>
 <div th:replace="/fragment/headerBar :: headerBar"></div>
 
-<div class = "w-25 m-auto">
-    <h1>메인 화면</h1>
+<div class = "w-25 m-auto py-5">
+    <h2 class="text-center">
+        메인 화면
+    </h2>
+
     <hr class="my-4">
-    <div class="col">
+    <div>
         <button type="button" th:onclick="|location.href='@{/login}'|" class="w-100 btn btn-primary btn-lg">로그인</button>
     </div>
-    <div class="col">
+    <div>
         <button type="button" th:onclick="|location.href='@{/members/add}'|" class="w-100 btn btn-secondary btn-lg">회원 가입</button>
     </div>
 </div>
+
 <div th:replace="/fragment/footer :: footer"></div>
 
 </body>
